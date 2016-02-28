@@ -1,0 +1,117 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Report for assignment 1}
+\author{Vasudha Todi (14EC10059)}
+
+\begin{document}
+
+\maketitle
+
+\paragraph{Multiplication of long integers using FFT/IFFT technique}
+\begin{enumerate}
+ \item \textbf{Random generation of integers}
+
+ The digits of the integers are generated randomly by taking the number of digits as a parameter.
+
+ \item \textbf{Obtaining polynomial from integers}
+ 
+ Polynomials are obtained by taking the digits of the integers to be the coefficients of the polynomials
+ 
+ E.g. : 
+   $5962 = A(x) = 2 + 6x + 9(x^2) + 5(x^3)$
+ 
+ \item \textbf{Fast Fourier Transform}
+ 
+ Consider the above polynomial. Suppose it is to be evaluated at four points. The polynomial is broken into 2 parts, even and odd, and evaluated recursively.
+ 
+   $A_{even}(x) = 2 + 9x\\
+    A_{odd}(x) = 6 + 5x\\
+    A(x) = A_{even}(x^2) + x A_{odd}(x^2)$
+    
+ If the four point are taken to be the 4th roots of unity(w), the time for evaluating the polynomial reduces to O(mlogm) using the FFT algorithm.
+ 
+    \begin{algorithm}
+    \caption{FFT}
+    \begin{algorithmic}[1]
+    \State{FFT}{$(n,A,F)$}
+    \If{$n = 1$}
+        \State $F\left[0\right] \gets a_{0}$ 
+        \State return
+    \EndIf
+    \State $A_{even} = \left[ a_{0} a_{2} ... a_{n-2} \right]$
+    \State $A_{odd} = \left[ a_{1} a_{3} ... a_{n-1} \right]$
+    \State $FFT(n/2, A_{even}, EF)$
+    \State $FFT(n/2, A_{odd}, OF)$
+    \algstore{myalgo}
+    \end{algorithmic}
+    \end{algorithm}
+    
+    \begin{algorithm}
+    \begin{algorithmic}[1]
+    \algrestore{myalgo}
+    \For{$j \gets 0; j \leq n/2; ++j$}
+        \State $F\left[j\right] = EF\left[j\right] + w^j*OF\left[j\right]$
+        \State $F\left[j+n/2\right] = EF\left[j\right] - w^j*OF\left[j\right]$
+    \EndFor
+    \end{algorithmic}
+    \end{algorithm}
+ 
+ \item \textbf{Inverse Fast Fourier Transform}
+ 
+ The IFFT is used to obtain the coefficients of a polynomial from its value at n points, i.e., the nth roots of unity.
+ 
+    \begin{algorithm}
+    \caption{IFFT}
+    \begin{algorithmic}[1]
+    \State{IFFT}{$(n,A,F)$}
+    \If{$n = 1$}
+        \State $F\left[0\right] \gets a_{0}$ 
+        \State return
+    \EndIf
+    \State $A_{even} = \left[ a_{0} a_{2} ... a_{n-2} \right]$
+    \State $A_{odd} = \left[ a_{1} a_{3} ... a_{n-1} \right]$
+    \State $IFFT(n/2, A_{even}, EF)$
+    \State $IFFT(n/2, A_{odd}, OF)$
+    \For{$j \gets 0; j \leq n/2; ++j$}
+        \State $F\left[j\right] = EF\left[j\right] + w^{-j}*OF\left[j\right]$
+        \State $F\left[j+n/2\right] = EF\left[j\right] - w^{-j}*OF\left[j\right]$
+    \EndFor
+    \end{algorithmic}
+    \end{algorithm}
+    
+  The final result is divided by n.
+  
+  \item \textbf{Multiplication of two polynomials}
+  
+  Multiplication of 2 polynomials is achieved by multiplying their fast fourier transforms at sufficient number of points and then applying inverse FFT on the result.
+  
+    \begin{algorithm}
+    \caption{Mutiplication}
+    \begin{algorithmic}[1]
+    \State $FFT(m, A, F_{A})$
+    \State $FFT(m, B, F_{B})$
+    \For {$i = 1, m$}
+        \State $F_{C}\left[i\right] = F_{A}\left[i\right]*F_{B}\left[i\right]$
+    \EndFor
+    \State $IFFT(m, F_{C}, C)$
+    \State $C \gets \frac{1}{m} * C$  
+    \end{algorithmic}
+    \end{algorithm}
+  
+  \item \textbf{Final Result}
+  
+  The final integer is obtained from the coefficients of the above polynomial.\\
+  Example :\\
+  $12*26\\
+   A(x) = 2 + x\\
+   B(x) = 6 + 2x\\
+   C(x) = A(x)*B(x) = 12 + 10x + 2x^2\\
+   C \leftarrow 312\\$
+   
+   \textbf{END}
+\end{enumerate}   
+\end{document}

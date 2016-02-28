@@ -1,0 +1,86 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Report for assignment 6}
+\author{Vasudha Todi (14EC10059)}
+
+\begin{document}
+
+\maketitle
+
+
+\paragraph{Interval Trees}
+\begin{enumerate}
+ \item \textbf{To create a mutually exclusive and exhaustive equal sized interval tree}
+This is a recursive function where the median node is taken as the root node at each step. The function is then called recursively for the left and the right sub-trees. 
+
+
+  \begin{algorithm}
+    \caption{Creating an interval tree}
+    \begin{algorithmic}[1]
+    \State{createIntervalTree}{$(l,u,n)$}
+    \If{$l>=u$}
+        \State return NULL
+    \EndIf
+    \State $step = (u-l+1)/n$
+    \State store the median node as the root node
+    \State $root.left = createIntervalTree(l,tree.l-1,n/2)$
+    \State $root.right = createIntervalTree(tree.u+1,u,n/2)$
+    \State return tree
+    \end{algorithmic}
+  \end{algorithm}
+  
+  
+  
+  The complexity of the function is given by :\\
+  $T(n) = 2*T(n/2) + O(1)$\\
+  By the master method,\\
+  $a=1, b=1$\\
+  The solution is given by :\\
+  $T(n) = n^{log_{b}a}$\\
+  hence,\\
+    $T(n) = O(n)$
+
+ \item \textbf{To merge an interval with the given interval tree}
+First, a node is created for the new interval. Then the first overlapping interval from the root is found out and its elements are inserted in the new node. Then the elements of the subsequents overlapping intervals are include and the tree is edited accordingly.\\\\
+
+
+  \begin{algorithm}
+    \caption{Merge an interval with the tree}
+    \begin{algorithmic}[1]
+    \State{merge}{$(tree,l,u)$}
+    \State Create a new node for the interval to be merged
+    \State Traverse the tree to find the first overlapping node (b)
+    \If{l lies before b.l}
+        \State Traverse the left sub-tree
+        \If{l is greater than the interval}
+            \State Move to the next right node
+        \ElsIf{l is smaller than the interval}
+            \State Include all elements of the right sub-tree in the new node and move to the next left node
+        \Else
+            \State Insert the elements after l and the elements of the right sub-tree in the new node
+            \State break
+        \EndIf
+    \EndIf
+    \If{u lies after b.u}
+        \State Repeat the same thing for the right side
+    \EndIf
+    \If{l and/or u lies within the interval}
+        \State Create a new node for the remaining elements of b on both the sides
+        \State Link it to the new node
+    \EndIf
+    \State Remove the existing node and insert the new node
+    \State return root
+    \end{algorithmic}
+  \end{algorithm}
+  
+  The complexity of the functions is given by : O(n+k)\\
+  where, n is the number of intervals and k the number of elements\\
+  As, in the worst case, the whole tree is overlapping and all the elements need to be included in the new interval and also all the nodes have to be traversed. 
+  
+\end{enumerate}
+
+\end{document}

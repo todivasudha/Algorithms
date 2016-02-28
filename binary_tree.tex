@@ -1,0 +1,78 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Report for assignment 5}
+\author{Vasudha Todi (14EC10059)}
+
+\begin{document}
+
+\maketitle
+
+
+\paragraph{Binary Trees}
+\begin{enumerate}
+ \item \textbf{To find the path from the root to a leaf node that has the maximum sum}
+A recursive function is used to implement this. At every step the tree is divided into 2 sub-trees and the maximum sum path from them is then found out. The sub-tree with a larger sum is taken.
+
+  \begin{algorithm}
+    \caption{Max sum path from root to leaf}
+    \begin{algorithmic}[1]
+    \State{maxRootSumPath}{$(root,path)$}
+    \If{$root = NULL$}
+        \State return 0
+    \EndIf
+    \State l = maxRootSumPath(root.left, left)
+    \State r = maxRootSumPath(root.right, right)
+    \If{$l>r$}
+        \State max = l + root.a
+        \State store the left path and root in the new path
+    \Else
+        \State max = r + root.a
+        \State store the right path and root in the new path
+    \EndIf
+    \State return max
+    \end{algorithmic}
+  \end{algorithm}
+
+ \item \textbf{To find the path between any pair of nodes that has the maximum sum}
+At each step the maximum path upto the step is calculated and also the maximum path considering that node. The maximum path consisting of the node is calculated by comparing the maximum among the left sub-path, the right sub-path and the root node being considered.
+
+  \begin{algorithm}
+    \caption{Max sum path between any pair of nodes}
+    \begin{algorithmic}[1]
+    \State{maxSumPath}{$(root,path,sidepath,max)$}
+    \If{$root = NULL$}
+        \State return 0
+    \EndIf
+    \State l = maxSumPath(root.left, path, left, max))
+    \State r = maxtSumPath(root.right, path, right, max)
+    \If{$l>r$}
+        \If{$l>0$}
+            \State $sidemax = l + root.a$
+            \State store the left side path and root in the side path
+        \Else
+            \State $sidemax = root.a$
+            \State store root in the side path
+        \EndIf
+    \Else
+        \State Do the same thing for the right side
+    \EndIf
+    \If{$(max < l+r+root.a) OR (max < sidemax)$}
+        \If{$l+r+root.a > sidemax$}
+            \State $max = l+r+root.a$
+            \State store the left path, root and the right path in path
+        \Else
+            \State max = sidemax
+            \State path = side path
+        \EndIf
+    \EndIf
+    \State return sidemax
+    \end{algorithmic}
+  \end{algorithm}
+  
+\end{enumerate}
+
+\end{document}

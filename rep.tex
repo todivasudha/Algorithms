@@ -1,0 +1,99 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+
+\title{Report for assignment 1}
+\author{Your Name (Roll Number)}
+
+\begin{document}
+
+\maketitle
+
+\paragraph{Determination of optimal base matrix size}
+\begin{enumerate}
+ \item \textbf{First step}
+
+Details of the step.
+
+Next paragraph.
+
+ \item \textbf{Second step}
+
+An inline formula: $\mathbf{C} = \mathbf{A} \mathbf{B}$.
+
+Let $\mathbf{A}$ be a $m \times l$ matrix and $\mathbf{B}$
+a $l \times n$ matrix.
+
+Each element $c_{ij}$ of $\mathbf{C}$ is defined as
+$\sum_{k=1}^{k=l} a_{ik}c_{kj}$.
+
+A mathematical formula:
+
+\(
+\left[
+\begin{array}{cc}
+C_{11}&C_{12}\\
+C_{21}&C_{22}\\
+\end{array}
+\right]
+=
+\left[
+\begin{array}{cc}
+A_{11}&A_{12}\\
+A_{21}&A_{22}\\
+\end{array}
+\right]
+\left[
+\begin{array}{cc}
+B_{11}&B_{12}\\
+B_{21}&B_{22}\\
+\end{array}
+\right]
+=
+\left[
+\begin{array}{cc}
+A_{11}B_{11} + A_{12}B_{21} & A_{11}B_{12} + A_{12}B_{22}\\
+A_{21}B_{11} + A_{22}B_{21} & A_{21}B_{12} + A_{22}B_{22}\\
+\end{array}
+\right]
+\)
+
+Some equations:
+
+\(
+\begin{array}{cc}
+P_1 =& (A_{11}+ A_{22})(B_{11}+B_{22})\\
+P_2 =& (A_{21}+A_{22})B_{11}\\
+P_3 =& A_{11}(B_{12}-B_{22})\\
+P_4 =& A_{22}(B_{21}-B_{11})\\
+P_5 =& (A_{11}+A_{12})B_{22}\\
+P_6 =& (A_{21}-A_{11})(B_{11}+B_{12})\\
+P_7 =& (A_{12}-A_{22})(B_{21}+B_{22})\\
+C_{11}=& P_1 + P_4 - P_5 + P_7\\
+C_{12}=& P_3 + P_5\\
+C_{21}=& P_2 + P_4\\
+C_{22}=& P_1 + P_3 - P_2 + P_6\\
+\end{array}
+\)
+
+\end{enumerate}
+
+Descriptive items may be written as follows:
+\begin{description}
+  \item[An item]
+     Its description.
+  \item[Another item]
+     Its description.
+\end{description}
+
+\paragraph{Recurrence to characterise the running time}
+Details follow here.
+
+More details.
+The total no. of flops required is
+ $2(7m^3) + 18m^2 = \frac{7}{8}(2n^3) + \frac{9}{2}n^2$.
+
+The command to compile this document:
+\fbox{\tt pdflatex rep} or \fbox{\tt pdflatex rep.tex}
+
+\end{document}

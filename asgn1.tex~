@@ -1,0 +1,186 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+
+\title{Report for assignment 1}
+\author{Vasudha Todi (14EC10059)}
+
+\begin{document}
+
+\maketitle
+
+\paragraph{Multiplication of long integers using FFT/IFFT technique}
+\begin{enumerate}
+ \item \textbf{Random generation of integers}
+
+ The digits of the integers are generated randomly by taking the number of digits as a parameter.
+
+ \item \textbf{Obtaining polynomial from integers}
+ 
+ Polynomials are obtained by taking the digits of the integers to be the co efficients of the polynomials
+ 
+ E.g. : 
+   $5962 = A(x) = 2 + 6x + 9(x^2) + 5(x^3)$
+ 
+ \item \textbf{Fast Fourier Transform}
+ 
+ Consider the above polynomial. Suppose it is to be evaluated at four points. The polynomial is broken into 2 parts, even and odd, and evaluated recursively.
+ 
+   $A_{even}(x) = 2 + 9x\\
+    A_{odd}(x) = 6 + 5x\\
+    A(x) = A_{even}(x^2) + x A_{odd}(x^2)$
+    
+ If the four point are taken to be the 4th roots of unity(w), the time for evaluating the polynomial reduces to O(mlogm) using the FFT algorithm.
+ 
+    \begin{algorithm}
+    \caption{FFT(n, A, F)}
+    \begin{algorithmic}
+    \IF{$n = 1$}
+        \STATE $F\left[0\right] \gets a_{0}$ 
+        \STATE return
+    \ENDIF
+    \STATE $A_{even} = \left[ a_{0}&a_{2}&...&a_{n-2} \right]$
+    \STATE $A_{odd} = \left[ a_{1}&a_{3}&...&a_{n-1} \right]$
+    \STATE $FFT(n/2, A_{even}, EF)$
+    \STATE $FFT(n/2, A_{odd}, OF)$
+    \FOR{$j \gets 0; j \leq n/2; ++j$}
+        \STATE $F\left[j\right] = EF\left[j\right] + w^j*OF\left[j\right]$
+        \STATE $F\left[j+n/2\right] = EF\left[j\right] - w^j*OF\left[j\right]$
+    \ENDFOR
+    \end{algorithmic}
+    \end{algorithm}
+ 
+ \item \textbf{Inverse Fast Fourier Transform}
+ 
+ The IFFT is used to obtain the co efficients if a polynomial form its value at n points, i.e., the nth roots of unity.
+ 
+    \begin{algorithm}
+    \caption{IFFT(n, A, F)}
+    \begin{algorithmic}
+    \IF{$n = 1$}
+        \STATE $F\left[0\right] \gets a_{0}$ 
+        \STATE return
+    \ENDIF
+    \STATE $A_{even} = \left[ a_{0}&a_{2}&...&a_{n-2} \right]$
+    \STATE $A_{odd} = \left[ a_{1}&a_{3}&...&a_{n-1} \right]$
+    \STATE $IFFT(n/2, A_{even}, EF)$
+    \STATE $IFFT(n/2, A_{odd}, OF)$
+    \FOR{$j \gets 0; j \leq n/2; ++j$}
+        \STATE $F\left[j\right] = EF\left[j\right] + w^-j*OF\left[j\right]$
+        \STATE $F\left[j+n/2\right] = EF\left[j\right] - w^-j*OF\left[j\right]$
+    \ENDFOR
+    \end{algorithmic}
+    \end{algorithm}
+    
+  The final result is divided by n.
+  
+  \item \textbf{Multiplication of two polynomials}
+  
+  Multiplication of 2 polynomials is achieved by multiplying their fast fourier transforms at sufficient number of points and then applying inverse FFT on the result.
+  
+    \begin{algorithm}
+    \caption{Mutiplication()}
+    \begin{algorithmic}
+    \STATE $FFT(m, A, F_{A})$
+    \STATE $FFT(m, B, F_{B})$
+    \FOR {$i = 1, m$}
+        \STATE $F_{C}\left[i\right] = F_{A}\left[i\right]*F_{B}\left[i\right]$
+    \ENDFOR
+    \STATE $IFFT(m, F_{C}, C)$
+    \STATE $C \gets \frac{1}{m} * C$  
+    \end{algorithmic}
+    \end{algorithm}
+  
+  \item \textbf{Final Result}
+  
+  The final integer is obtained from the coefficients of the above polynomial.\\
+  Example :\\
+  $12*26\\
+   A(x) = 2 + x\\
+   B(x) = 6 + 2x\\
+   C(x) = A(x)*B(x) = 12 + 10x + 2x^2\\
+   C \leftarrow 312\\$
+   
+ 
+
+
+An inline formula: $\mathbf{C} = \mathbf{A} \mathbf{B}$.
+
+Let $\mathbf{A}$ be a $m \times l$ matrix and $\mathbf{B}$
+a $l \times n$ matrix.
+
+Each element $c_{ij}$ of $\mathbf{C}$ is defined as
+$\sum_{k=1}^{k=l} a_{ik}c_{kj}$.
+
+A mathematical formula:
+
+\(
+\left[
+\begin{array}{cc}
+C_{11}&C_{12}\\
+C_{21}&C_{22}\\
+\end{array}
+\right]
+=
+\left[
+\begin{array}{cc}
+A_{11}&A_{12}\\
+A_{21}&A_{22}\\
+\end{array}
+\right]
+\left[
+\begin{array}{cc}
+B_{11}&B_{12}\\
+B_{21}&B_{22}\\
+\end{array}
+\right]
+=
+\left[
+\begin{array}{cc}
+A_{11}B_{11} + A_{12}B_{21} & A_{11}B_{12} + A_{12}B_{22}\\
+A_{21}B_{11} + A_{22}B_{21} & A_{21}B_{12} + A_{22}B_{22}\\
+\end{array}
+\right]
+\)
+
+Some equations:
+
+\(
+\begin{array}{cc}
+P_1 =& (A_{11}+ A_{22})(B_{11}+B_{22})\\
+P_2 =& (A_{21}+A_{22})B_{11}\\
+P_3 =& A_{11}(B_{12}-B_{22})\\
+P_4 =& A_{22}(B_{21}-B_{11})\\
+P_5 =& (A_{11}+A_{12})B_{22}\\
+P_6 =& (A_{21}-A_{11})(B_{11}+B_{12})\\
+P_7 =& (A_{12}-A_{22})(B_{21}+B_{22})\\
+C_{11}=& P_1 + P_4 - P_5 + P_7\\
+C_{12}=& P_3 + P_5\\
+C_{21}=& P_2 + P_4\\
+C_{22}=& P_1 + P_3 - P_2 + P_6\\
+\end{array}
+\)
+
+\end{enumerate}
+
+Descriptive items may be written as follows:
+\begin{description}
+  \item[An item]
+     Its description.
+  \item[Another item]
+     Its description.
+\end{description}
+
+\paragraph{Recurrence to characterise the running time}
+Details follow here.
+
+More details.
+The total no. of flops required is
+ $2(7m^3) + 18m^2 = \frac{7}{8}(2n^3) + \frac{9}{2}n^2$.
+
+The command to compile this document:
+\fbox{\tt pdflatex rep} or \fbox{\tt pdflatex rep.tex}
+
+\end{document}
