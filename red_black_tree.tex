@@ -1,0 +1,98 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Report for assignment 7}
+\author{Vasudha Todi (14EC10059)}
+
+\begin{document}
+
+\maketitle
+
+
+\paragraph{Red Black Trees}
+\begin{enumerate}
+ \item \textbf{Insertion of elements in a red-black tee}
+Insertion is done by performing BST insert followed by steps to maintain the red-black properties. It involves rotations and recoloring.
+
+  \begin{algorithm}
+    \caption{Inserting in a red black tree}
+    \begin{algorithmic}[1]
+    \State{rbInsert}{$(T,n)$}
+    \State bstInsert(T, n)
+    \State n.color = red
+    \State x=n
+    \While{$x!=NULL \:and\: x.parent.color = red$}
+        \State Mark the uncle node (parent.parent.otherchild) as u
+        \If{u.color = red}
+            \State u.color = p.color = black
+            \State p.parent.color = red
+            \State x = p.parent
+        \EndIf
+        \If{$u.color = black \:and\: p = p.parent.left$}
+            \If{x = p.right}
+                \State leftRotate about p
+            \EndIf
+            \State rightRotate about p.parent
+            \State recolor
+            \State return T
+        \EndIf
+        \If{$u.color = black \:and\: p = p.parent.right$}
+            \State Do the same thing for the opposite side
+            \State return T
+        \EndIf
+    \EndWhile
+    return T
+    \end{algorithmic}
+  \end{algorithm}
+
+
+ \item \textbf{Deletion in a red-black tree}
+Deletion is carried out for a leaf node or the 2nd last node. Here the operation is carried out according to the sibling. This is a complex process.
+
+
+  \begin{algorithm}
+    \caption{Deleting in a red-black tree}
+    \begin{algorithmic}[1]
+    \State{rbDelete}{$(T,n)$}
+    \If{n.color = red}
+        \State Simply remove the node
+    \Else
+        \State x=n
+        \While{$x!=root \:and\: x!=NULL$}
+            \State s = x.parent.otherchild
+            \If{s has a red child and s = s.parent.right}
+                \State leftRotate s.parent
+                \State recolor
+                \State x = NULL
+            \ElsIf{s has a red child and s = s.parent.left}
+                \State rightRotate s.parent
+                \State recolor
+                \State x = NULL
+            \Else
+                \State s.color = red
+                \State x = x.parent
+            \EndIf
+        \EndWhile
+    \EndIf
+    \State free(n)
+    \State return T
+    \end{algorithmic}
+  \end{algorithm}
+  
+  \item \textbf{Complexity of insert and delete}
+ Time for each rotation : O(1)\\
+ Time for recoloring : O(1)\\
+ Time to traverse the tree : O(logn)\\
+ In the worst case scenario, the insertion or deletion involves traversing the whole height of the tree and at each step rotations and recoloring are performed.\\
+ $T(n) = O(logn) + O(1)
+       = O(logn)$
+       
+ \item \textbf{Process Management}
+Two functions, process creator and scheduler are used. There are M processes and a maximum of N node in the tree. If t is time for a process and i its priority, then number of time insertion or deletion is carried out for it = t/(i*50). So, for each process the time taken will be t/(i*50)*O(logN).So, for M process it is (t/(i*50))*M*O(logN).
+
+\end{enumerate}
+
+\end{document}
