@@ -1,0 +1,59 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Report for assignment 10}
+\author{Vasudha Todi (14EC10059)}
+
+\begin{document}
+
+\maketitle
+
+\paragraph{Currency conversion using Bellman Ford}
+\begin{enumerate}
+ \item \textbf{The algorithm}
+Bellman Ford is an efficient algorithm for the problem of finding opportunity for profit in currency conversion.\\
+  \begin{algorithm}
+    \caption{bellmanFord algorithm}
+    \begin{algorithmic}[1]
+    \State{bellmanFord}{$(X[30][30],s,n)$}
+    \For{$i = 0; i < n; i++$}
+        \If{$i = s$}
+            \State $d[i] = 0$
+        \Else
+            \State $d[i] = INTMAX$
+        \EndIf
+    \EndFor
+    \For{$i = 0; i < n-1; i++$}
+        \For{$u = 0; u < n; u++$}
+            \For{$v = 0; v < n; v++$}
+                \If{$d[v] > d[u] + X[u][v]$}
+                    \State $d[v] = d[u] + X[u][v]$
+                \EndIf
+            \EndFor
+        \EndFor
+    \EndFor
+    \For{$u = 0; u < n; u++$}
+        \For{$v = 0; v < n; v++$}
+            \If{$d[v] > d[u] + X[u][v]$}
+                \State return 1
+            \EndIf
+        \EndFor
+    \EndFor
+    \State return 0
+    \end{algorithmic}
+  \end{algorithm}
+Here -log(X[u][v]/100) is passed into the function.\\
+
+\item \textbf{Analysis of algorithm}\\
+The algorithm runs in O(VE) time, where V is the number of vertices and E is the number of edges.\\
+$E = n^2$\\
+$V = n$\\
+Thus, $T(n) = O(n^3)$\\
+The algorithm runs just for one source and checks for a negative weight cycle. Since, the graph is fully connected there is no need to check for other sources.\\
+
+\end{enumerate}
+
+\end{document}

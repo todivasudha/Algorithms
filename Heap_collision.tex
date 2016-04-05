@@ -1,0 +1,78 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Report for assignment 8}
+\author{Vasudha Todi (14EC10059)}
+
+\begin{document}
+
+\maketitle
+
+
+\paragraph{Collision using heaps}
+\begin{enumerate}
+ \item \textbf{Simulation process for the heap}
+Five balls are simulated such that there trajectories can be plotted. Here the collisions have been taken as elastic collisions in 2 dimensions.
+
+  \begin{algorithm}
+    \caption{Simulation process}
+    \begin{algorithmic}[1]
+    \State{Process}{$(T,n)$}
+    \If{$t < maxTime$}
+        \State e = extractMinHeap(E[], N)
+        \If{status of event is invalid}
+            \State Process()
+            \State return
+        \EndIf
+        \State Identify whether a 2 particle collision or collision with a wall
+        \State Advance the corresponding particles to the collision time
+        \State Write in respective files
+        \State The respective element lists are traversed and future elements deleted and their status marked as invalid
+        \State All possible new events added
+        \State Process()
+        \State return
+    \EndIf
+    \State return
+    \end{algorithmic}
+  \end{algorithm}
+
+\item \textbf{Choice of data types}\\
+Two structures are mainly used: one for the state of the ball and other for the events of collision\\
+struct state\\
+\{\\
+        int color;\\
+        int radius;\\
+        struct point pos;\\
+        struct point vel;\\
+        float t;\\
+        struct node *list;\\
+\}\\
+
+struct event\\
+\{\\
+       int i;\\
+        int j;\\
+        int status;\\
+        float time;\\
+        int type;\\
+\}\\
+The program uses a heap of event pointers as its data structure.\\
+
+ \item \textbf{Complexity analysis for heaps}\\
+The complexity of the various heap functions are : \\
+Heapify : \\
+Maximum time taken is the height of the tree.\\
+$T(n) = O(log{n})$\\
+Building a heap :\\
+Seems to be nlogn but actually it occurs in linear time, i.e., \\
+$T(n) = O(n)$\\
+Extract minimum :\\
+Since this is a minimum heap the topmost element is the minimum element. So time:\\
+$T(n) = O(logn)$\\
+
+\end{enumerate}
+
+\end{document}

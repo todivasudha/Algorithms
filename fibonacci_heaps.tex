@@ -1,0 +1,134 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Report for assignment 9}
+\author{Vasudha Todi (14EC10059)}
+
+\begin{document}
+
+\maketitle
+
+\paragraph{Fibonacci heaps}
+\begin{enumerate}
+ \item \textbf{Insertion in heap}
+The element is just added to the root list.\\
+  \begin{algorithm}
+    \caption{Insertion}
+    \begin{algorithmic}[1]
+    \State{insertHeap}{$(H,a,n)$}
+    \State create new node with the element to be inserted
+    \State insert the element in the root list
+    \If{$a < H.a || H == NULL$}
+        \State H = a
+    \EndIf
+    \State n++
+    \State return H
+    \end{algorithmic}
+  \end{algorithm}
+The actual as well as amortized cost is O(1).
+
+\item \textbf{Union of two heaps}\\
+In this just the root lists of both the heaps are concatenated.
+  \begin{algorithm}
+    \caption{Union}
+    \begin{algorithmic}[1]
+    \State{unionHeap}{$(H1,H2,n1,n2)$}
+    \State H = makeHeap()
+    \If{H1 = NULL}
+        \State return H2
+    \EndIf 
+    \If{H2 = NULL}
+        \State return H1
+    \EndIf
+    \State H = H1
+    \State concatenate H2 to the root list of H
+    \If{$H1.a > H2.a$}
+        \State H = H2
+    \EndIf
+    \State n = n1 + n2
+    \algstore{myalg}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}                     
+\begin{algorithmic} [1]
+\algrestore{myalg}
+    \State return H
+    \end{algorithmic}
+  \end{algorithm}
+
+This operation is also performed in O(1) time.
+
+ \item \textbf{Extracting min node in heap}
+In this the min is extracted along with consolidation.
+
+  \begin{algorithm}
+    \caption{Extract Min}
+    \begin{algorithmic}[1]
+    \State{extractMinHeap}{$(H,n)$}
+    \If{$H != NULL$}
+        \For{each child x of H}
+            \State add x to the root list of H
+            \State p[x] = NULL
+        \EndFor
+        \State remove the min node from the root list of H
+        \State H = right[H]
+        \State CONSOLIDATE(H)
+        \State n--
+    \EndIf
+    \State return H
+    \end{algorithmic}
+  \end{algorithm}
+
+The consolidate function iterates through the root list and if two node have the same degree then it merges them.\\
+The degree of the any root node is bounded by log(n). Thus the amortized cost for extract min is O(log(n)).
+
+ \item \textbf{Decreasing key in heap}
+Decrease key cuts the decreased node if lesser than its parent and include it in the root list. Then cascading cut is performed.
+
+  \begin{algorithm}
+    \caption{Decrease key}
+    \begin{algorithmic}[1]
+    \State{decreaseKeyHeap}{$(H,x,k)$}
+    \If{$x.a < k$}
+        \State Print("greater key")
+        \State return H
+    \EndIf
+    \State x.a = k
+    \State y = p[x]
+    \If{$y = NULL and x.a < y.a$}
+        \State CUT(H,x,y)
+        \State CASCADING-CUT(H,y)
+    \EndIf
+    \If{$x.a < H.a$}
+        \State H = x
+    \algstore{myalg}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}                     
+\begin{algorithmic} [1]
+\algrestore{myalg}
+    \EndIf
+    \State return H
+    \end{algorithmic}
+  \end{algorithm}
+
+The cut function removes x from child list of y and insert in the root list and marks false.\\
+The cascading cut function start cutting from y to the root till it get a false marked node. It marks the node true.\\
+The worst case cost will be log(n) but the amortized cost is O(1).
+
+\item \textbf{Analysis of whole program}\\
+If the block size is m, no. of blocks in a list is m1 and the no. of lists is k, the number of times the functions are running :\\
+insert = k*m1*m\\
+union = k*m1\\
+extract min = k*m1*m\\
+decrease key = m1\\
+Thus, the amortized cost of the whole program = O(k*m1*m*log(n)) = O(n*log(n))
+
+\end{enumerate}
+
+\end{document}
