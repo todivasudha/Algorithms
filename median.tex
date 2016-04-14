@@ -1,0 +1,59 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Report for assignment 11}
+\author{Vasudha Todi (14EC10059)}
+
+\begin{document}
+
+\maketitle
+
+\paragraph{Finding the kth smallest element across two lists}
+\begin{enumerate}
+ \item \textbf{The algorithm}The algoritm here uses medians of medians to find the (k/2)th smallest element in both the lists. Then it compares both the values and takes the list before the larger value and that after the smaller value to form two heaps. Elements from the heap are extracted and compared one by one then.\\
+  \begin{algorithm}
+    \caption{Median Of Medians}
+    \begin{algorithmic}[1]
+    \State{medianOfMedians}{$(A[],p,q,k)$}
+    \If{$p = q$}
+        \State return A[p]
+    \EndIf
+    \State Make groups of five and sort each group trivially
+    \State recursively call this function for finding the median of these medians, i.e., the pivot
+    \State Partition across the pivot to get the rank
+    \If{$rank = k$}
+        \State return pivot
+    \ElsIf{$rank > k$}
+        \State return medianOfMedians(A, p, p+rank-1, k);
+    \EndIf
+    \State return medianOfMedians(A, p, p+rank-1, k);
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}
+    \caption{The process}
+    \begin{algorithmic}[1]
+    \State{process}{$(A[],B[],n,k)$}
+    \State Call medianOfMedians() for k/2th ranked elements in both
+    \State Build a minheap with the elements greater then the smaller element
+    \State Build a maxheap with the elements lesser than the larger element
+    \State Extract elements from both the heaps one by one and compare within them till the kth ranked element is obtained
+    \State return
+    \end{algorithmic}
+  \end{algorithm}
+
+\item \textbf{Analysis of algorithm}\\
+The median of medians algorithm takes O(n) time for both the lists.\\
+Building both the heaps will take O(n) time.\\
+Each extraction from the heap takes O(log(n)) time.\\
+The maximum no. of extractions is k/2.\\
+Thus,\\
+$T(n) = O(n) + O(n) + O(k*log(n))\\
+     = O(n + k*log(n))$
+
+\end{enumerate}
+
+\end{document}
