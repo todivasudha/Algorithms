@@ -1,0 +1,59 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Report for assignment 4}
+\author{Vasudha Todi (14EC10059)}
+
+\begin{document}
+
+\maketitle
+
+
+\paragraph{Last Man Standing}
+\begin{enumerate}
+ \item \textbf{To determine the elimination order and hence the survivor according to the given scheme}\\
+The elimination order is determined using a recursive function. A relation is derived between V(n) and V(n/2) and the survivor is obtained using V(1).\\
+$V(n) = V(n/2)*2^i - d$, where $d = d_{prev} + (-1)^n*2^{i-1}$ and i is the iteration number.
+
+  \begin{algorithm}
+    \caption{Last Man Standing}
+    \begin{algorithmic}[1]
+    \State{survivor}{$(n,j,d)$}
+    \State $d =  d +/-  2^{j-1}$               //sign according to previous n
+    \If{$n = 1$}
+        \State return $(2^j - d)$
+    \EndIf
+    \For{$(i = 1; i <= n/2; i++)$}
+        \State print $(2*i)*2^j - d$
+    \EndFor
+    \State if n is odd eliminate first element also
+    \State return survivor(n/2,j+1,d)
+    \end{algorithmic}
+  \end{algorithm}
+  
+  The survivor can also be obtained from the formula :\\
+  $V(2^m +l) = 2*l + 1$, for $m>=0$ and $0<=l<2*m$
+ 
+ \item \textbf{Results :}
+ 
+ Value of n : 11\\
+ Output :\\
+ The elimination order is : 2, 4, 6, 8, 10, 1, 5, 9, 3, 11\\
+ The survivor is : 7\\
+ The survivor from the formula is : 7
+
+ \item \textbf{Analytical check of the formula to obtain the survivor position}
+ If we tabulate the value of n and V(n),\\\\
+ $n\;\;   =    \; 1, \; 2, \; 3, \; 4, \; 5, \; 6, \; 7, \; 8, \; 9, \; 10\\
+  V(n) =  1, \; 1, \; 3, \; 1, \; 3, \; 5, \; 7, \; 1, \; 3, \; 5$\\
+ So, V(n) is an increasing odd sequence starting with V(n)=1 whenever n is a power of 2. Thus if we choose m and l such that $n = 2^m + l$ such that $0<=l<2*m$, then $V(n) = 2*l+1$. Or,\\
+ $V(2^m +l) = 2*l + 1$, for $m>=0$ and $0<=l<2*m$\\
+ Hence proved.
+ 
+ \textbf{END}
+\end{enumerate}
+
+\end{document}
